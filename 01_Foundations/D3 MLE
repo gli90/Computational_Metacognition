@@ -1,0 +1,39 @@
+# =====================================================
+# Day 3
+# Maximum Likelihood Estimation (MLE)
+# Estimate Parameters by Maximizing Likelihood
+# =====================================================
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 1. 生成数据（正态分布）
+data = np.random.normal(loc=0, scale=1, size=1000)
+observed_data = data
+sigma = 1
+
+# -------------------------------
+# Day 3: 直接计算最优 mu（MLE）
+# -------------------------------
+
+# 方法1：解析解（最重要）
+# 对于正态分布，最优 μ 就是数据的平均值
+mle_mu = np.mean(observed_data)
+print("MLE (analytical) mu =", mle_mu)
+
+# -------------------------------
+# 方法2：数值优化（通用方法）
+# -------------------------------
+
+from scipy.optimize import minimize
+
+# 定义负 log-likelihood（因为 minimize 是最小化）
+def neg_log_likelihood(mu):
+    return 0.5 * np.mean(((observed_data - mu) / sigma) ** 2)
+
+# 初始猜测
+initial_guess = 0
+
+result = minimize(neg_log_likelihood, initial_guess)
+
+print("MLE (numerical) mu =", result.x[0])
