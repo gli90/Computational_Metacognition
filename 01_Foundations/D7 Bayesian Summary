@@ -1,0 +1,281 @@
+# =====================================================
+# Day 7
+# Bayesian Decision Making
+# Compare Likelihood, Prior, Posterior, and MAP
+# =====================================================
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+
+# # =====================================================
+# # 1. observed data
+# # =====================================================
+
+# # 当前看到的数据
+
+# observed_data = 4
+
+# # =====================================================
+# # 2. candidate mu
+# # =====================================================
+
+# # 测试很多可能的 mu
+
+# mu_values = np.linspace(-5, 10, 500)
+
+# # =====================================================
+# # 3. PRIORS
+# # =====================================================
+
+# # prior mean:
+# # 原本认为 mu 在 0 附近
+
+# prior_mean = 0
+
+# # =====================================================
+# # Strong prior
+# # =====================================================
+
+# # sigma 很小
+# # = prior 很尖
+# # = 非常确信原本经验
+
+# strong_prior_sigma = 0.5
+
+# strong_prior = np.exp(
+
+#     -0.5 *
+
+#     (
+#         (mu_values - prior_mean)
+#         / strong_prior_sigma
+#     ) ** 2
+# )
+
+# # =====================================================
+# # Weak prior
+# # =====================================================
+
+# # sigma 很大
+# # = prior 很宽
+# # = 原本经验不强
+
+# weak_prior_sigma = 4
+
+# weak_prior = np.exp(
+
+#     -0.5 *
+
+#     (
+#         (mu_values - prior_mean)
+#         / weak_prior_sigma
+#     ) ** 2
+# )
+
+# # =====================================================
+# # 4. LIKELIHOOD
+# # =====================================================
+
+# # 数据噪声
+
+# likelihood_sigma = 1
+
+# # likelihood:
+# # 当前数据支持哪个 mu
+
+# likelihood = np.exp(
+
+#     -0.5 *
+
+#     (
+#         (observed_data - mu_values)
+#         / likelihood_sigma
+#     ) ** 2
+# )
+
+# # normalize
+
+# likelihood = likelihood / np.sum(likelihood)
+
+# # =====================================================
+# # 5. POSTERIORS
+# # =====================================================
+
+# # posterior ∝ prior × likelihood
+
+# # -----------------------------------------------------
+# # strong prior posterior
+# # -----------------------------------------------------
+
+# strong_posterior = strong_prior * likelihood
+
+# strong_posterior = (
+#     strong_posterior
+#     / np.sum(strong_posterior)
+# )
+
+# # -----------------------------------------------------
+# # weak prior posterior
+# # -----------------------------------------------------
+
+# weak_posterior = weak_prior * likelihood
+
+# weak_posterior = (
+#     weak_posterior
+#     / np.sum(weak_posterior)
+# )
+
+# # =====================================================
+# # 6. MAP
+# # =====================================================
+
+# # posterior 峰值对应的 mu
+
+# strong_map = mu_values[
+#     np.argmax(strong_posterior)
+# ]
+
+# weak_map = mu_values[
+#     np.argmax(weak_posterior)
+# ]
+
+# print("Strong prior MAP =", strong_map)
+
+# print("Weak prior MAP =", weak_map)
+
+# # =====================================================
+# # 7. Plot
+# # =====================================================
+
+# # likelihood
+# plt.plot(
+#     mu_values,
+#     likelihood,
+#     label="Likelihood"
+# )
+
+# # strong prior posterior
+# plt.plot(
+#     mu_values,
+#     strong_posterior,
+#     label="Strong Prior Posterior"
+# )
+
+# # weak prior posterior
+# plt.plot(
+#     mu_values,
+#     weak_posterior,
+#     label="Weak Prior Posterior"
+# )
+
+# plt.xlabel("mu")
+# plt.ylabel("Probability")
+
+# plt.legend()
+
+# plt.show()
+
+
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# =========================================
+# 1. observed data
+# =========================================
+
+observed_data = 4
+
+# =========================================
+# 2. candidate mu
+# =========================================
+
+mu_values = np.linspace(-5, 10, 500)
+
+# =========================================
+# 3. PRIORS
+# =========================================
+
+prior_mean = 0
+
+# strong prior
+strong_prior_sigma = 0.5
+
+strong_prior = np.exp(
+    -0.5 *
+    ((mu_values - prior_mean) / strong_prior_sigma) ** 2
+)
+
+# weak prior
+weak_prior_sigma = 4
+
+weak_prior = np.exp(
+    -0.5 *
+    ((mu_values - prior_mean) / weak_prior_sigma) ** 2
+)
+
+# =========================================
+# 4. LIKELIHOOD
+# =========================================
+
+likelihood_sigma = 1
+
+likelihood = np.exp(
+    -0.5 *
+    ((observed_data - mu_values) / likelihood_sigma) ** 2
+)
+
+# normalize
+likelihood = likelihood / np.sum(likelihood)
+
+# =========================================
+# 5. POSTERIORS
+# =========================================
+
+strong_posterior = strong_prior * likelihood
+strong_posterior = strong_posterior / np.sum(strong_posterior)
+
+weak_posterior = weak_prior * likelihood
+weak_posterior = weak_posterior / np.sum(weak_posterior)
+
+# =========================================
+# 6. MAP
+# =========================================
+
+strong_map = mu_values[np.argmax(strong_posterior)]
+
+weak_map = mu_values[np.argmax(weak_posterior)]
+
+print("Strong prior MAP =", strong_map)
+print("Weak prior MAP =", weak_map)
+
+# =========================================
+# 7. Plot
+# =========================================
+
+plt.plot(
+    mu_values,
+    likelihood,
+    label="Likelihood"
+)
+
+plt.plot(
+    mu_values,
+    strong_posterior,
+    label="Strong Prior Posterior"
+)
+
+plt.plot(
+    mu_values,
+    weak_posterior,
+    label="Weak Prior Posterior"
+)
+
+plt.xlabel("mu")
+plt.ylabel("Probability")
+
+plt.legend()
+
+plt.show()
